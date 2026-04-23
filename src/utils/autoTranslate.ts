@@ -215,7 +215,7 @@ class AutoTranslator {
   }
 }
 
-// Create global instance
+// Create global instancia
 export const autoTranslator = new AutoTranslator();
 
 // Hook for React components
