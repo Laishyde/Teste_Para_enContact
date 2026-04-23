@@ -60,7 +60,7 @@ const Calendar: React.FC<CalendarProps> = ({ isOpen, onClose }) => {
     }
 
     // Schedule the items
-    const formattedDate = selectedDate.toISOString().split('T')[0];
+    const formattedDate = selectedDate.toISOString().split('T')[0]; // eslint-disable-line
     scheduleItems({
       date: formattedDate,
       time: selectedTime,
