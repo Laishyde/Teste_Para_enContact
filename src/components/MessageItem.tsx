@@ -30,7 +30,7 @@ const MessageItemComponent: React.FC<MessageItemProps> = ({ item, selectedIds, s
       `}
       onClick={(e) => handleSelectItem(item.id, e)}
     >
-      {/* Avatar / Checkbox Logic */}
+      {/* Avatar / Checkbox Logica */}
       <div className="relative w-12 h-12 shrink-0">
         {/* Display Checkbox on Hover OR if Any Selected */}
         <div className={`
