@@ -27,11 +27,23 @@ Uma aplicação React moderna para gerenciamento de contatos e mensagens, desenv
 src/
 |
 components/          # Componentes reutilizáveis
-  |- Header.tsx      # Cabeçalho com logout
-  |- Sidebar.tsx     # Navegação lateral
-  |- Toolbar.tsx     # Barra de ferramentas
-  |- MessageList.tsx # Lista de mensagens
+  |- Calendar.tsx    # Componente de calendário
+  |- EmptyState.tsx  # Estado vazio para listas
+  |- Footer.tsx      # Rodapé da aplicação
+  |- Header.tsx      # Cabeçalho principal com navegação
+  |- Layout.tsx      # Layout principal da aplicação
+  |- LoadingSpinner.tsx # Indicador de carregamento
+  |- MainContent.tsx # Conteúdo principal
   |- MessageCard.tsx # Card individual de mensagem
+  |- MessageItem.tsx # Item de mensagem detalhado
+  |- MessageList.tsx # Lista de mensagens
+  |- Overlay.tsx     # Overlay para modais
+  |- Sidebar.tsx     # Navegação lateral responsiva
+  |- Toast.tsx       # Notificações toast
+  |- ToastContainer.tsx # Container para toasts
+  |- Toolbar.tsx     # Barra de ferramentas
+  |- TopBar.tsx      # Barra superior
+  |- UserMenu.tsx    # Menu de usuário
 |
 pages/               # Páginas principais
   |- Login.tsx       # Página de autenticação
@@ -44,15 +56,28 @@ hooks/               # Hooks customizados
   |- useFetch.ts     # Hook para gerenciamento de API
 |
 context/             # Contextos React
+  |- AppContext.tsx  # Estado global da aplicação
+  |- LanguageContext.tsx # Gerenciamento de idioma
   |- ThemeContext.tsx # Gerenciamento de tema
-  |- LangContext.tsx  # Gerenciamento de idioma
+|
+utils/               # Utilitários
+  |- autoTranslate.ts # Sistema de tradução automática
+  |- dateUtils.ts    # Funções de manipulação de datas
+  |- initAutoTranslate.ts # Inicialização da tradução
+|
+styles/              # Estilos globais
+  |- globals.css     # Estilos CSS globais
 |
 types/               # Definições de tipos TypeScript
-  |- index.ts        # Interfaces e tipos
+  |- images.d.ts     # Tipos para imagens
+  |- index.ts        # Interfaces e tipos principais
+|
+assets/              # Recursos estáticos
+  |- logo.png        # Logo da aplicação
 |
 App.tsx              # Componente principal da aplicação
 index.tsx            # Ponto de entrada
-index.css            # Estilos globais
+index.css            # Estilos base
 ```
 
 ## Instalação e Configuração
