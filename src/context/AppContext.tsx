@@ -30,7 +30,7 @@ interface AppState {
   toasts: Toast[];
 }
 
-// Ações possíveis
+//  tipo de Ações possíveis 
 type AppAction = 
   | { type: 'TOGGLE_SIDEBAR' }
   | { type: 'TOGGLE_ITEM_SELECTION'; itemId: number }
