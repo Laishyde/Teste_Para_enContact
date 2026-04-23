@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos globais para a aplicação */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Estilos para tema escuro */
+.dark {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.dark .border-b {
+  border-color: #333;
+}
+
+.dark .border-r {
+  border-color: #333;
+}
+
+.dark .border {
+  border-color: #333;
+}
