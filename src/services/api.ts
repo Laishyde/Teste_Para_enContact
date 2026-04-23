@@ -1,12 +1,15 @@
 const API_BASE = "https://my-json-server.typicode.com/EnkiGroup/DesafioFrontEnd2026Jr";
 
 export const getMenus = async () => {
+  console.log(`📡 [API] Buscando menus de: ${API_BASE}/menus`);
   const response = await fetch(`${API_BASE}/menus`);
+  console.log(`📊 [API] Status da resposta menus: ${response.status}`);
   if (!response.ok) throw new Error("Erro ao buscar menus");
   const data = await response.json();
+  console.log(`📋 [API] Menus recebidos da API:`, data);
   
   // Add trash and agendamentos menus to response
-  return [
+  const menusWithExtras = [
     ...data,
     {
       id: 4,
@@ -24,60 +27,59 @@ export const getMenus = async () => {
       subMenus: []
     }
   ];
+  console.log(`📋 [API] Menus finais com extras:`, menusWithExtras);
+  return menusWithExtras;
 };
 
 export const getItems = async (id: number) => {
-  console.log(`Buscando itens para ID: ${id}`);
+  console.log(`🔍 [API] Buscando itens para ID: ${id}`);
   
-  // Immediately return sample data if API fails
+  // Verificar se é um menu principal (1, 2, 3) que não tem endpoint
+  if (id === 1 || id === 2 || id === 3) {
+    console.log(`⚠️ [API] ID ${id} é um menu principal, não tem endpoint de itens. Use os submenus.`);
+    return [];
+  }
+  
   try {
+    // Usar o endpoint correto da API: /items/{id}
     const url = `${API_BASE}/items/${id}`;
-    console.log(`URL completa: ${url}`);
+    console.log(`📡 [API] Buscando itens de: ${url}`);
     
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    
-    console.log(`Status da resposta: ${response.status}`);
+    const response = await fetch(url);
+    console.log(`📊 [API] Status da resposta: ${response.status}`);
     
     if (!response.ok) {
-      console.warn(`API retornou erro ${response.status}, usando dados de exemplo`);
+      if (response.status === 404) {
+        console.log(`⚠️ [API] Endpoint ${url} não existe (404)`);
+        return [];
+      }
       throw new Error(`API Error: ${response.status}`);
     }
 
     const data = await response.json();
-    console.log('Dados recebidos:', data);
+    console.log(`📋 [API] Dados recebidos:`, data);
 
     // A API retorna { subMenuItems: [...] }
     if (data && data.subMenuItems && Array.isArray(data.subMenuItems)) {
       const items = data.subMenuItems.map((item: any) => ({
         ...item,
         id: item.id || Math.random(),
-        users: Array.isArray(item.users) ? item.users : [],
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toTimeString().split(' ')[0].substring(0, 5),
+        read: false,
+        starred: false,
+        category: `Menu ${id}`
       }));
 
-      return items.length > 0 ? items : null;
+      console.log(`✅ [API] Processados ${items.length} itens para o menu ${id}:`, items);
+      return items;
     }
 
-    // Fallback para outros formatos
-    const normalized = Array.isArray(data)
-      ? data
-      : data && typeof data === "object"
-      ? [data]
-      : [];
-
-    const items = normalized.map((item: any) => ({
-      ...item,
-      id: item.id || Math.random(),
-      users: Array.isArray(item.users) ? item.users : [],
-    }));
-
-    return items.length > 0 ? items : null;
+    console.log(`⚠️ [API] Nenhum subMenuItems encontrado para menu ${id}`);
+    return [];
+    
   } catch (error) {
-    console.warn('API não disponível, retornando null para usar dados de exemplo:', error);
-    return null; // Return null to indicate API failure
+    console.warn(`❌ [API] Erro ao buscar itens:`, error);
+    return [];
   }
 };

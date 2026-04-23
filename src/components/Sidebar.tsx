@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronDown, Star, Inbox, Send, FileText, Trash2, X } from 'lucide-react';
 import { useApp, useAppActions } from '../context/AppContext';
 import { MenuItem } from '../types';
-import logo from '../assets/logo.png';
+
 import '../styles/globals.css';
 
 const Sidebar: React.FC = () => {
@@ -16,6 +16,11 @@ const Sidebar: React.FC = () => {
       'Rascunhos': <FileText size={18} />,
       'Lixeira': <Trash2 size={18} />,
       'Favoritos': <Star size={18} />,
+      'Caixa de entrada': <Inbox size={18} />,
+      'Caixa de saída': <Send size={18} />,
+      'Entrada': <Inbox size={18} />,
+      'Vip': <Star size={18} />,
+      'Lixo': <Trash2 size={18} />,
     };
     return icons[menuName] || <Inbox size={18} />;
   };
@@ -27,23 +32,14 @@ const Sidebar: React.FC = () => {
       toggleMenu(menuId);
     } else {
       setSelectedMenu(menuId);
-      // Fechar sidebar apenas no mobile após selecionar um item
-      // Verificar se está realmente no mobile (não apenas viewport width)
-      const isMobile = window.innerWidth <= 768;
-      if (isMobile && state.isSidebarOpen) {
-        toggleSidebar();
-      }
+      // Não fechar sidebar mais - só fechar com botão X
     }
   };
 
   const handleSubMenuClick = (e: React.MouseEvent, subMenuId: number) => {
     e.stopPropagation();
     setSelectedMenu(subMenuId);
-    // Fechar sidebar apenas no mobile após selecionar um item
-    const isMobile = window.innerWidth <= 768;
-    if (isMobile && state.isSidebarOpen) {
-      toggleSidebar();
-    }
+    // Não fechar sidebar mais - só fechar com botão X
   };
 
   return (
@@ -69,11 +65,7 @@ const Sidebar: React.FC = () => {
           <div className="p-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <img 
-                  src={logo} 
-                  alt="eC Logo" 
-                  className="w-8 h-8 rounded-lg shadow-md"
-                />
+                
                 {state.isSidebarOpen && (
                   <span className="font-bold text-lg hide-mobile">enContact</span>
                 )}
@@ -126,7 +118,10 @@ const Sidebar: React.FC = () => {
                   
                   {menu.subMenus && menu.subMenus.length > 0 && (
                     <button
-                      onClick={(e) => handleSubMenuClick(e, menu.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleMenu(menu.id);
+                      }}
                       className={`p-1 rounded transition-transform duration-200 ${
                         state.openMenus[menu.id] ? 'rotate-180' : ''
                       } ${!state.isSidebarOpen ? 'hide-mobile' : ''}`}
@@ -140,8 +135,7 @@ const Sidebar: React.FC = () => {
                 {/* Submenus */}
                 {menu.subMenus && 
                  menu.subMenus.length > 0 && 
-                 state.openMenus[menu.id] && 
-                 state.isSidebarOpen && (
+                 state.openMenus[menu.id] && (
                   <div className="ml-6 mt-1 space-y-1 animate-slide-in">
                     {menu.subMenus.map((subMenu) => (
                       <div

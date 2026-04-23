@@ -219,6 +219,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (storedState) {
       try {
         const parsed = JSON.parse(storedState);
+        // No mobile, garantir que sidebar comece fechada
+        if (window.innerWidth <= 768) {
+          parsed.isSidebarOpen = false;
+        }
         dispatch({ type: 'INITIALIZE_FROM_STORAGE', payload: parsed });
       } catch (error) {
         console.error('Erro ao carregar estado do localStorage:', error);

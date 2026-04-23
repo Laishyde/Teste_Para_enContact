@@ -81,15 +81,28 @@ const AppContent: React.FC = () => {
 
   // Carregar menus quando o usuário fizer login
   useEffect(() => {
+    console.log(`🔄 [APP] useEffect menus - isLoggedIn: ${state.isLoggedIn}, menus.length: ${state.menus.length}`);
     if (state.isLoggedIn && state.menus.length === 0) {
+      console.log(`📥 [APP] Iniciando carregamento de menus`);
       setLoading(true);
       const loadMenus = async () => {
         try {
           const menus = await getMenus();
+          console.log(`📋 [APP] Menus carregados:`, menus);
           setMenus(menus);
-          setSelectedMenu(menus[0]?.id || 1);
+          // Encontrar o primeiro submenu disponível
+          let firstSubMenuId = null;
+          for (const menu of menus) {
+            if (menu.subMenus && menu.subMenus.length > 0) {
+              firstSubMenuId = menu.subMenus[0].id;
+              break;
+            }
+          }
+          const firstMenuId = firstSubMenuId || 11; // Fallback para ID 11
+          console.log(`🎯 [APP] Selecionando primeiro submenu: ${firstMenuId}`);
+          setSelectedMenu(firstMenuId);
         } catch (error) {
-          console.error('Error loading menus:', error);
+          console.error('❌ [APP] Error loading menus:', error);
         } finally {
           setLoading(false);
         }
@@ -100,26 +113,36 @@ const AppContent: React.FC = () => {
 
   // Carregar itens quando um menu for selecionado
   useEffect(() => {
+    console.log(`🔄 [APP] useEffect itens - selectedMenuId: ${state.selectedMenuId}, isLoggedIn: ${state.isLoggedIn}, menus.length: ${state.menus.length}`);
     if (state.selectedMenuId && state.isLoggedIn && state.menus.length > 0) {
+      console.log(`📥 [APP] Iniciando carregamento de itens para menu ${state.selectedMenuId}`);
       setLoading(true);
       const loadItems = async () => {
         try {
           // Se for o menu de lixeira (ID 4), mostrar itens excluídos
           if (state.selectedMenuId === 4) {
+            console.log(`🗑️ [APP] Carregando itens da lixeira`);
             setItems(state.deletedItems);
           } else if (state.selectedMenuId === 5) {
             // Menu de agendamentos (ID 5), mostrar itens agendados
+            console.log(`📅 [APP] Carregando itens agendados`);
             setItems(state.scheduledItems);
           } else if (state.selectedMenuId === 6) {
             // Menu de arquivados (ID 6), mostrar itens arquivados
+            console.log(`📁 [APP] Carregando itens arquivados`);
             setItems(state.archivedItems);
           } else {
+            console.log(`📦 [APP] Buscando itens da API para menu ${state.selectedMenuId}`);
             const items = await getItems(state.selectedMenuId!);
+            console.log(`📋 [APP] Itens recebidos da API:`, items);
             // If API returns null or empty items, use sample messages
             if (!items || items.length === 0) {
+              console.log(`⚠️ [APP] API retornou vazio, usando dados de exemplo`);
               const sampleMessages = getSampleMessages();
+              console.log(`📝 [APP] Mensagens de exemplo:`, sampleMessages);
               setItems(sampleMessages);
             } else {
+              console.log(`✅ [APP] Usando itens da API`);
               setItems(items);
             }
           }
@@ -129,27 +152,27 @@ const AppContent: React.FC = () => {
             toggleSidebar();
           }
         } catch (error) {
-          console.error('Erro ao carregar itens:', error);
+          console.error('❌ [APP] Erro ao carregar itens:', error);
           // Add sample messages as fallback
           const sampleMessages = getSampleMessages();
           setItems(sampleMessages);
         } finally {
           setLoading(false);
           
-          // Trigger translation after items are loaded
-          if (window.autoTranslator && state.items.length > 0) {
-            setTimeout(() => {
+          // Trigger translation after items are loaded - usar ref para evitar loop
+          setTimeout(() => {
+            if (window.autoTranslator) {
               const currentLang = window.autoTranslator.getCurrentLanguage();
               if (currentLang !== 'pt') {
                 window.autoTranslator.translatePage();
               }
-            }, 200);
-          }
+            }
+          }, 200);
         }
       };
       loadItems();
     }
-  }, [state.selectedMenuId, state.isLoggedIn, state.menus.length, state.deletedItems, state.scheduledItems, state.archivedItems, state.items.length, setItems, setLoading, toggleSidebar]);
+  }, [state.selectedMenuId, state.isLoggedIn, state.menus.length, state.deletedItems, state.scheduledItems, state.archivedItems, setItems, setLoading, toggleSidebar]);
 
   // Renderizar Login ou Layout principal
   if (!state.isLoggedIn) {
