@@ -13,7 +13,7 @@ Uma aplicação React moderna para gerenciamento de contatos e mensagens, desenv
 - **Internacionalização**: Suporte para português e inglês
 - **Design Responsivo**: Interface adaptável para diferentes dispositivos
 
-## Tecnologias Utilizadas
+## Tecnologias Utilizadas neste projeto
 
 - **React 18** - Biblioteca principal de UI
 - **TypeScript** - Tipagem estática para melhor desenvolvimento
